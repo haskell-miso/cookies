@@ -105,8 +105,8 @@ updateModel = \case
       ms (length (cookiesDeleted ev)) <> " deleted (change event)."
     cookieGetAll GotAll CookieErr
 ----------------------------------------------------------------------------
-viewModel :: context -> props -> Model -> View context Model Action
-viewModel _ _ m =
+viewModel :: Model -> View context props Model Action
+viewModel m =
   H.div_
     [ CSS.style_
         [ CSS.fontFamily      "system-ui, sans-serif"
@@ -126,7 +126,7 @@ viewModel _ _ m =
     , allCookiesView m
     ]
 ----------------------------------------------------------------------------
-heading :: View context Model Action
+heading :: View context props Model Action
 heading =
   H.div_ []
     [ H.h2_
@@ -151,7 +151,7 @@ inputRow
   :: MisoString
   -> MisoString
   -> (MisoString -> Action)
-  -> View context Model Action
+  -> View context props Model Action
 inputRow label_ val action =
   H.div_
     [ CSS.style_
@@ -178,7 +178,7 @@ inputRow label_ val action =
         ]
     ]
 ----------------------------------------------------------------------------
-buttonRow :: View context Model Action
+buttonRow :: View context props Model Action
 buttonRow =
   H.div_
     [ CSS.style_
@@ -193,7 +193,7 @@ buttonRow =
     , btn "Delete" (rgb 239  68  68) DoDelete
     ]
 ----------------------------------------------------------------------------
-btn :: MisoString -> CSS.Color -> Action -> View context Model Action
+btn :: MisoString -> CSS.Color -> Action -> View context props Model Action
 btn label_ color_ action =
   H.button_
     [ H.onClick action
@@ -210,7 +210,7 @@ btn label_ color_ action =
     ]
     [ text label_ ]
 ----------------------------------------------------------------------------
-statusBar :: Model -> View context Model Action
+statusBar :: Model -> View context props Model Action
 statusBar m =
   H.p_
     [ CSS.style_
@@ -224,7 +224,7 @@ statusBar m =
     ]
     [ text (m ^. statusMessage) ]
 ----------------------------------------------------------------------------
-readResultView :: Model -> View context Model Action
+readResultView :: Model -> View context props Model Action
 readResultView m =
   case m ^. readResult of
     Nothing -> H.div_ [] []
@@ -242,7 +242,7 @@ readResultView m =
         , text v
         ]
 ----------------------------------------------------------------------------
-allCookiesView :: Model -> View context Model Action
+allCookiesView :: Model -> View context props Model Action
 allCookiesView m
   | null (m ^. allCookies) = H.div_ [] []
   | otherwise =
@@ -253,7 +253,7 @@ allCookiesView m
         : map cookieRow (m ^. allCookies)
         )
 ----------------------------------------------------------------------------
-cookieRow :: Cookie -> View context Model Action
+cookieRow :: Cookie -> View context props Model Action
 cookieRow c =
   H.div_
     [ CSS.style_
